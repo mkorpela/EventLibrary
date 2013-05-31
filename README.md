@@ -41,3 +41,5 @@ Event dispatcher Library for Robot Framework
       
       Käynnistä eventtiluuppi ja odota et kaikki on käsitelty     event timeout 30s
 </code>
+
+http://en.wikipedia.org/wiki/Event_dispatching_thread
