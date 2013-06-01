@@ -1,0 +1,8 @@
+*** Settings ***
+Library  EventLibrary
+
+*** Test Cases ***
+Events
+  Invoke Later  Log  Hello
+  Invoke Later  Log  World
+  Execute Event Loop
