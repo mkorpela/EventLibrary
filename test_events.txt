@@ -2,7 +2,11 @@
 Library  EventLibrary
 
 *** Test Cases ***
-Events
+Invoke Later Test
   Invoke Later  Log  Hello
   Invoke Later  Log  World
+  Execute Event Loop
+
+Invoke After Test
+  Invoke After  2  Log  Printed after 2 seconds
   Execute Event Loop
