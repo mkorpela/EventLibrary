@@ -18,6 +18,12 @@ class EventLibrary(object):
           condition_time = float(delay)+time.time()
           return lambda: time.time() >= condition_time
 
+      def invoke_when(self, condition, keyword, *arguments):
+          self._events.appendleft((self._keyword_condition(condition), keyword, arguments))
+
+      def _keyword_condition(self, keyword):
+          return lambda: BuiltIn().run_keyword_and_return_status(keyword)
+
       def execute_event_loop(self):
           while self._events:
             condition, keyword, arguments = self._events.pop()
