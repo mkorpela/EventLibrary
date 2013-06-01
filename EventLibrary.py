@@ -9,9 +9,15 @@ class EventLibrary(object):
           self._no_condition = lambda: True
 
       def invoke_later(self, keyword, *arguments):
+          """
+          The keyword will be executed when it is its turn in the event queue.
+          """
           self._events.appendleft((self._no_condition, keyword, arguments))
 
       def invoke_after(self, delay, keyword, *arguments):
+          """
+          The keyword will be executed when it is its turn in the event queue and the given delay has gone.
+          """
           self._events.appendleft((self._time_condition(delay), keyword, arguments))
 
       def _time_condition(self, delay):
@@ -19,6 +25,9 @@ class EventLibrary(object):
           return lambda: time.time() >= condition_time
 
       def invoke_when(self, condition, keyword, *arguments):
+          """
+          The keyword will be executed when it is its turn in the event queue and the given keyword condition doesn't fail
+          """
           self._events.appendleft((self._keyword_condition(condition), keyword, arguments))
 
       def _keyword_condition(self, keyword):
