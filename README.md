@@ -1,45 +1,62 @@
 EventLibrary
 ============
 
-Event dispatcher Library for Robot Framework
+Event Library for Robot Framework.
+This allows one to say that when A happens then do X and when B happens then do Y.
+
+One could argue that there are 3 levels of waiting:
+
+1) Sleeper: Sleep
+2) Poller: Wait Until
+3) Observer: Invoke When
+
+This library aims to allow you to act with the 3 option.
 
 <code>
-    *** Test Cases ***
+*** Settings ***
+Library  EventLibrary
 
-    Odottele valoja
+*** Variables ***
+${SKY}   dark
 
-      Laukase juttu mikä pistää punasen valon joskus palaa
+*** Test Cases ***
+Invoke Later Test
+  ${hello}=  Invoke Later  Log  Hello
+  ${world}=  Invoke Later  Log  World
+  Wait Until Events Happened  ${hello}  ${world}
 
-      Venaa et punanen valo palaa
-      
-      Laukase juttu mikä pistää sinisen valon joskus palaan
-      
-      Laukase juttu mikä pistää vihreen valon joskus palaan
-      
-      Venaa et sininen valo palaa
-      
-      Laukase juttu mikä pistää keltasen valon joskus palaan
-      
-      Venaa et vihree valo palaa
-      
-      Venaa et keltanen valo palaa
+Invoke After Test
+  ${event}=  Invoke After  0.5  Log  Printed after 0.5 seconds
+  Wait Until Events Happened  ${event}
 
+Invoke When Test
+  Set sky color to blue
+  ${orange}=  Invoke When  Sky is orange  Log  Impossible!!!
+  Invoke After  0.1  Set sky color to orange
+  Wait Until Events Happened  ${orange}
 
-    Eventtijuttui
-      
-      Laukase juttu mikä pistää punasen valon joskus palaan
-      
-      Lisää eventti  sit ku se punanen valo palaa niin   Laukase juttu mikä pistää vihreen valon joskus palaan    timeout 5s
-      
-      Lisää eventti  sit ku se vihree valo palaa niin    Hyvä hyvä
-      
-      Laukase juttu mikä pistää sinisen valon joskus palaan
-      
-      Lisää eventti  sit ku se sininen valo palaa niin   Laukase juttu mikä pistää keltasen valon joskus palaan
-      
-      Lisää eventti  sit ku se keltanen valo palaa niin   Hyvä hyvä
-      
-      Käynnistä eventtiluuppi ja odota et kaikki on käsitelty     event timeout 30s
+Invoking in the event loop Test
+  Invoke Later  Set sky color to blue
+  ${ora}=  Invoke When   Sky is orange   Log end
+  Invoke When   Sky is blue     Set sky color to orange
+  Wait Until Events Happened  ${ora}
+
+*** Keywords ***
+Log end
+  ${ends}=  Invoke Later  Log  the end
+  Wait Until Events Happened  ${ends}
+
+Set sky color to blue
+  Set test variable  ${SKY}  blue
+
+Set sky color to orange
+  Set test variable  ${SKY}  orange
+
+Sky is orange
+  Should Be Equal    ${SKY}  orange
+
+Sky is blue
+  Should Be Equal    ${SKY}  blue
+
 </code>
 
-http://en.wikipedia.org/wiki/Event_dispatching_thread

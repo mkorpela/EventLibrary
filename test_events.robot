@@ -6,27 +6,31 @@ ${SKY}   dark
 
 *** Test Cases ***
 Invoke Later Test
-  Invoke Later  Log  Hello
-  Invoke Later  Log  World
-  Execute Event Loop
+  ${hello}=  Invoke Later  Log  Hello
+  ${world}=  Invoke Later  Log  World
+  Wait Until Events Happened  ${hello}  ${world}
 
 Invoke After Test
-  Invoke After  0.5  Log  Printed after 0.5 seconds
-  Execute Event Loop
+  ${event}=  Invoke After  0.5  Log  Printed after 0.5 seconds
+  Wait Until Events Happened  ${event}
 
 Invoke When Test
   Set sky color to blue
-  Invoke When  Sky is orange  Log  Impossible!!!
+  ${orange}=  Invoke When  Sky is orange  Log  Impossible!!!
   Invoke After  0.1  Set sky color to orange
-  Execute Event Loop
+  Wait Until Events Happened  ${orange}
 
 Invoking in the event loop Test
   Invoke Later  Set sky color to blue
-  Invoke When   Sky is orange   Invoke Later   Log  the end
+  ${ora}=  Invoke When   Sky is orange   Log end
   Invoke When   Sky is blue     Set sky color to orange
-  Execute Event Loop
+  Wait Until Events Happened  ${ora}
 
 *** Keywords ***
+Log end
+  ${ends}=  Invoke Later  Log  the end
+  Wait Until Events Happened  ${ends}
+
 Set sky color to blue
   Set test variable  ${SKY}  blue
 
