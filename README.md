@@ -13,6 +13,7 @@ One could argue that there are 3 levels of waiting:
 This library aims to allow you to act with the 3 option.
 
 <code>
+  
 *** Settings ***
 Library  EventLibrary
 
